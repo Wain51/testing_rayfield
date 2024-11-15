@@ -34,7 +34,7 @@ local RayfieldLibrary = {
 
 			TabBackground = Color3.fromRGB(80, 80, 80),
 			TabStroke = Color3.fromRGB(85, 85, 85),
-			TabBackgroundSelected = Color3.fromRGB(255, 255, 255),
+			TabBackgroundSelected = Color3.fromRGB(210, 210, 210),
 			TabTextColor = Color3.fromRGB(240, 240, 240),
 			SelectedTabTextColor = Color3.fromRGB(50, 50, 50),
 
@@ -44,14 +44,14 @@ local RayfieldLibrary = {
 			ElementStroke = Color3.fromRGB(50, 50, 50),
 			SecondaryElementStroke = Color3.fromRGB(40, 40, 40), -- For labels and paragraphs
 
-			SliderBackground = Color3.fromRGB(31, 31, 31),
-			SliderProgress = Color3.fromRGB(31, 31, 31),
+			SliderBackground = Color3.fromRGB(43, 105, 159),
+			SliderProgress = Color3.fromRGB(43, 105, 159),
 			SliderStroke = Color3.fromRGB(48, 119, 177),
 
-			ToggleBackground = Color3.fromRGB(29, 29, 29),
-			ToggleEnabled = Color3.fromRGB(36, 188, 9),
-			ToggleDisabled = Color3.fromRGB(255, 0, 4),
-			ToggleEnabledStroke = Color3.fromRGB(35, 186, 9),
+			ToggleBackground = Color3.fromRGB(30, 30, 30),
+			ToggleEnabled = Color3.fromRGB(0, 146, 214),
+			ToggleDisabled = Color3.fromRGB(100, 100, 100),
+			ToggleEnabledStroke = Color3.fromRGB(0, 170, 255),
 			ToggleDisabledStroke = Color3.fromRGB(125, 125, 125),
 			ToggleEnabledOuterStroke = Color3.fromRGB(100, 100, 100),
 			ToggleDisabledOuterStroke = Color3.fromRGB(65, 65, 65),
@@ -114,7 +114,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
-local Rayfield = game:GetObjects("rbxassetid://10804731440")[1]
+local Rayfield = game:GetObjects("rbxassetid://76784365268932")[1]
 
 Rayfield.Enabled = false
 
@@ -637,7 +637,7 @@ end
 
 function Hide()
 	Debounce = true
-	RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping RightShift", Duration = 7})
+	RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping K", Duration = 7})
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 400)}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 45)}):Play()
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
@@ -1687,6 +1687,12 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox:GetPropertyChangedSignal("Text"):Connect(function()
 				TweenService:Create(Input.InputFrame, TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)}):Play()
 			end)
+
+			local InputSettings = {}
+			function InputSettings:Set(text) --Doesnt fire the event
+				Input.InputFrame.InputBox.Text = text
+			end
+			return InputSettings
 		end
 
 		-- Dropdown
@@ -2014,7 +2020,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			UserInputService.InputBegan:Connect(function(input, processed)
 
 				if CheckingForKey then
-					if input.KeyCode ~= Enum.KeyCode.Unknown and input.KeyCode ~= Enum.KeyCode.RightShift then
+					if input.KeyCode ~= Enum.KeyCode.Unknown and input.KeyCode ~= Enum.KeyCode.K then
 						local SplitMessage = string.split(tostring(input.KeyCode), ".")
 						local NewKeyNoEnum = SplitMessage[3]
 						Keybind.KeybindFrame.KeybindBox.Text = tostring(NewKeyNoEnum)
@@ -2436,7 +2442,7 @@ Topbar.Hide.MouseButton1Click:Connect(function()
 end)
 
 UserInputService.InputBegan:Connect(function(input, processed)
-	if (input.KeyCode == Enum.KeyCode.RightShift and not processed) then
+	if (input.KeyCode == Enum.KeyCode.K and not processed) then
 		if Debounce then return end
 		if Hidden then
 			Hidden = false
@@ -2477,5 +2483,11 @@ function RayfieldLibrary:LoadConfiguration()
 end
 
 task.delay(3.5, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
+if Rayfield:FindFirstChild("Notice") then
+	Rayfield.Notice.Visible = true
+	Rayfield.Notice.Interact.MouseButton1Click:Connect(function()
+		Rayfield.Notice.Visible = false
+	end)
+end
 
-return RayfieldLibrary
+	return RayfieldLibrary
